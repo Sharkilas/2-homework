@@ -35,11 +35,13 @@ app.use(jsonMiddleWare);
 
 
 const currentDate = new Date();
-const tomorrowDate = (date: Date, days: number) => {
+const incrementDate = (date: Date, days: number) => {
   const result = new Date(date);
    result.setDate(result.getDate() + days);
    return result;
 }
+
+const tommorowDate = incrementDate(currentDate, 1);
 
 
 
@@ -87,9 +89,9 @@ app.post('/videos', (req: Request, res: Response) => {
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
     canBeDownloaded: req.body.canBeDownloaded,
-    minAgeRestriction:	req.body.minAgeRestriction,           // если поставить currentDate.toISOString() то возникает ошибка
-    publicationDate:	req.body.publicationDate,              // если поставить tomorrowDate.toISOSstring то возникает ошибка                         
-    createdAt: req.body.createdAt
+    minAgeRestriction:	null,         // если поставить currentDate.toISOString() то возникает ошибка
+    publicationDate:	tommorowDate.toISOString(),              // если поставить tomorrowDate.toISOSstring то возникает ошибка                         
+    createdAt: currentDate.toISOString(),
   }
   dbVideos.push(UpdateVideosModels);                                        
                  
