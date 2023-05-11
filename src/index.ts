@@ -28,7 +28,7 @@ const dbVideos =[
 ]
 
 
-const jsonMiddleWare = express.json();
+const jsonMiddleWare = express.json();                              // не совсем понял предназначение этой строки
 app.use(jsonMiddleWare);
 
 
@@ -43,11 +43,16 @@ const tomorrowDate = (date: Date, days: number) => {
 
 
 
+app.delete('/testing/all-data', (req: Request, res: Response) => {
+  
+    res.sendStatus(httpStatusCodes.NO_CONTEND_204)
+  }
+)
 
 
 
 app.get('/videos', (req: Request, res: Response) => {
-  res.send(dbVideos)
+  res.sendStatus(httpStatusCodes.OK_200).send(dbVideos)
 })
 
 app.post('/videos', (req: Request, res: Response) => {
@@ -93,11 +98,16 @@ app.put('/videos/:id', (req: Request, res: Response) => {
  
 let foundVideos =(dbVideos.find(v=> v.id === +req.params.id))                
 if (!foundVideos) {
-res.sendStatus(httpStatusCodes.NOT_FOUND_404)
-return;
+res.status(httpStatusCodes.BAD_REQUEST_400).send({
+  errorMessage: [{
+    'message': "video not found",
+    "field": "canBeDownloaded"
+  }]}
+  );
 }
- if (!req.body.title || !(req.body.title.length < 41) || !(typeof(req.body.title) === "string")) {
- res.sendStatus(httpStatusCodes.BAD_REQUEST_400).send({
+let title = req.body.title
+ if (!title || title.length > 40 || typeof title !== "string") {
+ res.status(httpStatusCodes.BAD_REQUEST_400).send({
   errorMessage: [{
     'message': "incorrect title",
     "field": "tile"
@@ -113,17 +123,17 @@ return;
                    }]}
                    )
  let availableResolutions =req.body.availableResolutions;                                        // Как записать если нет и автора и тайтл
- if(!availableResolutions || !Array.isArray(availableResolutions))
+ if(!availableResolutions || !Array.isArray(availableResolutions)){
  res.status(httpStatusCodes.BAD_REQUEST_400).send({
                    errorMessage: [{
                      'message': "incorrect availableResolutions",
                      "field": "availableResolutions"
                    }]}
-                   )
+                   )}
 
- 
+ else {
 
-foundVideos.title = req.body.title
+                                                                 //foundVideos.title = req.body.title
 res.json(foundVideos)
 let UpdateVideosModels = {
   id:	+currentDate,
@@ -137,7 +147,7 @@ let UpdateVideosModels = {
 }
 
 dbVideos.push(UpdateVideosModels); 
-
+}
 })
    
                   
@@ -145,18 +155,18 @@ dbVideos.push(UpdateVideosModels);
 app.get('/videos/id', (req: Request, res: Response) => {
   let video = dbVideos.find(p=>p.id === +req.params.id)
   if (video) {
-    res.send(video)
+    res.send(httpStatusCodes.OK_200).send(video)
   }
-  else res.send(httpStatusCodes.NOT_FOUND_404)
+  else {res.send(httpStatusCodes.NOT_FOUND_404)}
   
-  res.send(dbVideos)
+  
 })
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
   let video = dbVideos.find(p=>p.id === +req.params.id)
   if (video) {
     dbVideos.filter(v=>v.id !== +req.params.id)
-    res.sendStatus(httpStatusCodes.NO_CONTEND_204)
+    res.send(httpStatusCodes.NO_CONTEND_204)
   }
   else res.send(httpStatusCodes.NOT_FOUND_404)
   
