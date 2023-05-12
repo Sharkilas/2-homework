@@ -47,7 +47,7 @@ const tommorowDate = incrementDate(currentDate, 1);
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
   dbVideos = []
-    res.sendStatus(httpStatusCodes.NO_CONTEND_204)
+    res.send(httpStatusCodes.NO_CONTEND_204)
   }
 )
 

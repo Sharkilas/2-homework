@@ -37,7 +37,7 @@ const incrementDate = (date, days) => {
 const tommorowDate = incrementDate(currentDate, 1);
 app.delete('/testing/all-data', (req, res) => {
     dbVideos = [];
-    res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
+    res.send(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
 });
 app.get('/videos', (req, res) => {
     res.sendStatus(http_status_codes_1.httpStatusCodes.OK_200).send(dbVideos);
