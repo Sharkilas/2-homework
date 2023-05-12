@@ -1,38 +1,12 @@
 import express, {Response, Request} from 'express';
 import { httpStatusCodes } from './http-status-codes/http-status-codes';
 import { VideosModels } from './models/Videomodels';
+import { dbVideos } from './repositories/dbVideosRep';
 const app = express()
 const port = 3003
-type dbVideos = Array<VideosModels> 
-const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-type availableResolutions = Array<string>                                                          // как задать значенеи enum
 
-let dbVideos =[
-  {id: 1,
-  title:	"string-1",
-  author:	"string-1",
-  canBeDownloaded: false,
-  minAgeRestriction:	 null,
-  createdAt:	"2023-05-08T10:49:49.732Z",
-  publicationDate:	'2023-05-09T10:49:49.732Z',
-  availableResolutions: ['P144', 'P240']},
-  
-  {id: 2,
-    title:	"string-2",
-    author:	"string-2",
-    canBeDownloaded: false,
-    minAgeRestriction:	 null,
-    createdAt:	"2023-05-08T10:49:49.732Z",
-    publicationDate:	'2023-05-09T10:49:49.732Z',
-    availableResolutions: ['P144', 'P360']},
-]
-
-
-const jsonMiddleWare = express.json();                              // не совсем понял предназначение этой строки
+const jsonMiddleWare = express.json();                              
 app.use(jsonMiddleWare);
-
-
-
 
 const currentDate = new Date();
 const incrementDate = (date: Date, days: number) => {
@@ -45,16 +19,18 @@ const tommorowDate = incrementDate(currentDate, 1);
 
 
 
-app.delete('/testing/all-data', (req: Request, res: Response) => {
-  dbVideos = []
-    res.send(httpStatusCodes.NO_CONTEND_204)
+ app.delete('/testing/all-data', (req: Request, res: Response) => {
+  dbVideos.splice(0, dbVideos.length)
+   res.send(httpStatusCodes.NO_CONTEND_204)
   }
 )
 
-
+app.get('/', (req: Request, res: Response) => {
+  res.send('Доброе утро!')
+})
 
 app.get('/videos', (req: Request, res: Response) => {
-  res.sendStatus(httpStatusCodes.OK_200).send(dbVideos)
+  res.send(dbVideos)                   //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
 })
 
 app.post('/videos', (req: Request, res: Response) => {
@@ -89,8 +65,8 @@ app.post('/videos', (req: Request, res: Response) => {
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
     canBeDownloaded: req.body.canBeDownloaded,
-    minAgeRestriction:	req.body.minAgeRestriction,         // если поставить currentDate.toISOString() то возникает ошибка
-    publicationDate:	tommorowDate.toISOString(),              // если поставить tomorrowDate.toISOSstring то возникает ошибка                         
+    minAgeRestriction:	req.body.minAgeRestriction,         
+    publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
   dbVideos.push(UpdateVideosModels);                                        
@@ -143,9 +119,9 @@ let UpdateVideosModels = {
   author:	req.body.author,
   availableResolutions: req.body.availableResolutions, 
   canBeDownloaded: req.body.canBeDownloaded,
-  minAgeRestriction:	req.body.minAgeRestriction,           // если поставить currentDate.toISOString() то возникает ошибка
-  publicationDate:	req.body.publicationDate,              // если поставить tomorrowDate.toISOSstring то возникает ошибка                                                      
-  createdAt: req.body.createdAt
+  minAgeRestriction:	req.body.minAgeRestriction,           
+  publicationDate:	tommorowDate.toISOString(),                                                                    
+  createdAt: currentDate.toISOString()
 }
 
 dbVideos.push(UpdateVideosModels); 
@@ -157,7 +133,7 @@ dbVideos.push(UpdateVideosModels);
 app.get('/videos/id', (req: Request, res: Response) => {
   let video = dbVideos.find(p=>p.id === +req.params.id)
   if (video) {
-    res.send(httpStatusCodes.OK_200).send(video)
+    res.send(video).send(httpStatusCodes.OK_200)
   }
   else {res.send(httpStatusCodes.NOT_FOUND_404)}
   

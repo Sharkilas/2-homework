@@ -5,7 +5,7 @@ export type UpdateVideosModels = {
     availableResolutions?: string[], 
     canBeDownloaded?: boolean,
     minAgeRestriction?:	number | null,
-    publicationDate?:	string,
-    createdAt?: string
+    publicationDate?:	Date,
+    createdAt?: Date,
     
 }

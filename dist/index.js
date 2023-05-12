@@ -5,28 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("./http-status-codes/http-status-codes");
+const dbVideosRep_1 = require("./repositories/dbVideosRep");
 const app = (0, express_1.default)();
 const port = 3003;
-const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-let dbVideos = [
-    { id: 1,
-        title: "string-1",
-        author: "string-1",
-        canBeDownloaded: false,
-        minAgeRestriction: null,
-        createdAt: "2023-05-08T10:49:49.732Z",
-        publicationDate: '2023-05-09T10:49:49.732Z',
-        availableResolutions: ['P144', 'P240'] },
-    { id: 2,
-        title: "string-2",
-        author: "string-2",
-        canBeDownloaded: false,
-        minAgeRestriction: null,
-        createdAt: "2023-05-08T10:49:49.732Z",
-        publicationDate: '2023-05-09T10:49:49.732Z',
-        availableResolutions: ['P144', 'P360'] },
-];
-const jsonMiddleWare = express_1.default.json(); // не совсем понял предназначение этой строки
+const jsonMiddleWare = express_1.default.json();
 app.use(jsonMiddleWare);
 const currentDate = new Date();
 const incrementDate = (date, days) => {
@@ -36,14 +18,17 @@ const incrementDate = (date, days) => {
 };
 const tommorowDate = incrementDate(currentDate, 1);
 app.delete('/testing/all-data', (req, res) => {
-    dbVideos = [];
+    dbVideosRep_1.dbVideos.splice(0, dbVideosRep_1.dbVideos.length);
     res.send(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
 });
+app.get('/', (req, res) => {
+    res.send('Доброе утро!');
+});
 app.get('/videos', (req, res) => {
-    res.sendStatus(http_status_codes_1.httpStatusCodes.OK_200).send(dbVideos);
+    res.send(dbVideosRep_1.dbVideos); //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
 });
 app.post('/videos', (req, res) => {
-    res.send(dbVideos);
+    res.send(dbVideosRep_1.dbVideos);
     let title = req.body.title; // Как записать если нет и автора и тайтл
     if (!title || typeof title !== 'string' || title.length > 40)
         res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
@@ -78,10 +63,10 @@ app.post('/videos', (req, res) => {
         publicationDate: tommorowDate.toISOString(),
         createdAt: currentDate.toISOString(),
     };
-    dbVideos.push(UpdateVideosModels);
+    dbVideosRep_1.dbVideos.push(UpdateVideosModels);
 });
 app.put('/videos/:id', (req, res) => {
-    let foundVideos = (dbVideos.find(v => v.id === +req.params.id));
+    let foundVideos = (dbVideosRep_1.dbVideos.find(v => v.id === +req.params.id));
     if (!foundVideos) {
         res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
             errorMessage: [{
@@ -126,30 +111,30 @@ app.put('/videos/:id', (req, res) => {
             availableResolutions: req.body.availableResolutions,
             canBeDownloaded: req.body.canBeDownloaded,
             minAgeRestriction: req.body.minAgeRestriction,
-            publicationDate: req.body.publicationDate,
-            createdAt: req.body.createdAt
+            publicationDate: tommorowDate.toISOString(),
+            createdAt: currentDate.toISOString()
         };
-        dbVideos.push(UpdateVideosModels);
+        dbVideosRep_1.dbVideos.push(UpdateVideosModels);
     }
 });
 app.get('/videos/id', (req, res) => {
-    let video = dbVideos.find(p => p.id === +req.params.id);
+    let video = dbVideosRep_1.dbVideos.find(p => p.id === +req.params.id);
     if (video) {
-        res.send(http_status_codes_1.httpStatusCodes.OK_200).send(video);
+        res.send(video).send(http_status_codes_1.httpStatusCodes.OK_200);
     }
     else {
         res.send(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
     }
 });
 app.delete('/videos/:id', (req, res) => {
-    let video = dbVideos.find(p => p.id === +req.params.id);
+    let video = dbVideosRep_1.dbVideos.find(p => p.id === +req.params.id);
     if (video) {
-        dbVideos.filter(v => v.id !== +req.params.id);
+        dbVideosRep_1.dbVideos.filter(v => v.id !== +req.params.id);
         res.send(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
     }
     else
         res.send(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
-    res.send(dbVideos);
+    res.send(dbVideosRep_1.dbVideos);
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
