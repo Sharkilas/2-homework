@@ -7,7 +7,7 @@ type dbVideos = Array<VideosModels>
 const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
 type availableResolutions = Array<string>                                                          // как задать значенеи enum
 
-const dbVideos =[
+let dbVideos =[
   {id: 1,
   title:	"string-1",
   author:	"string-1",
@@ -46,7 +46,7 @@ const tommorowDate = incrementDate(currentDate, 1);
 
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
-  
+  dbVideos = []
     res.sendStatus(httpStatusCodes.NO_CONTEND_204)
   }
 )
@@ -89,7 +89,7 @@ app.post('/videos', (req: Request, res: Response) => {
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
     canBeDownloaded: req.body.canBeDownloaded,
-    minAgeRestriction:	null,         // если поставить currentDate.toISOString() то возникает ошибка
+    minAgeRestriction:	req.body.minAgeRestriction,         // если поставить currentDate.toISOString() то возникает ошибка
     publicationDate:	tommorowDate.toISOString(),              // если поставить tomorrowDate.toISOSstring то возникает ошибка                         
     createdAt: currentDate.toISOString(),
   }
