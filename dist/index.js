@@ -125,7 +125,7 @@ app.put('/videos/:id', (req, res) => {
 app.get('/videos/:id', (req, res) => {
     const videoId = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
     if (videoId) {
-        res.send(videoId);
+        res.send(videoId).sendStatus(http_status_codes_1.httpStatusCodes.OK_200);
     }
     else {
         res.sendStatus(404);

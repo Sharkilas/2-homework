@@ -130,7 +130,7 @@ errors.push({'message': "incorrect title",
 app.get('/videos/:id', (req: Request, res: Response) => {
   const videoId = db.videos.find(v=>v.id === +req.params.id)
   if (videoId) {
-    res.send(videoId)
+    res.send(videoId).sendStatus(httpStatusCodes.OK_200)
   } else {
     res.sendStatus(404)
   }
