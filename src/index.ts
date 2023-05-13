@@ -48,7 +48,7 @@ errors.push({message: "incorrect title",
               field: "author"
               })}
                                     
-  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) ){
+  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| dbavailableResolutions.includes(req.body.availableResolutions) == false ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
@@ -100,7 +100,7 @@ errors.push({message: "incorrect title",
  errors.push({message: "incorrect minAgeRestriction",
              field: "minAgeRestriction"
                                      })}
-if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) ){
+if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)||dbavailableResolutions.includes(req.body.availableResolutions)==false ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
