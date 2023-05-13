@@ -17,9 +17,9 @@ const incrementDate = (date, days) => {
     return result;
 };
 const tommorowDate = incrementDate(currentDate, 1);
-app.delete('/testing/all-data', (req, res) => {
+app.delete("/testing/all-data", (req, res) => {
     dbVideosRep_1.dbVideos.splice(0, dbVideosRep_1.dbVideos.length);
-    res.send(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
+    res.sendStatus(204); //send(httpStatusCodes.NO_CONTEND_204)
 });
 app.get('/', (req, res) => {
     res.send('Доброе утро!');
@@ -28,7 +28,6 @@ app.get('/videos', (req, res) => {
     res.send(dbVideosRep_1.dbVideos); //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
 });
 app.post('/videos', (req, res) => {
-    res.send(dbVideosRep_1.dbVideos);
     let title = req.body.title; // Как записать если нет и автора и тайтл
     if (!title || typeof title !== 'string' || title.length > 40)
         res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
@@ -64,6 +63,7 @@ app.post('/videos', (req, res) => {
         createdAt: currentDate.toISOString(),
     };
     dbVideosRep_1.dbVideos.push(UpdateVideosModels);
+    res.send(dbVideosRep_1.dbVideos);
 });
 app.put('/videos/:id', (req, res) => {
     let foundVideos = (dbVideosRep_1.dbVideos.find(v => v.id === +req.params.id));

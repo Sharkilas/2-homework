@@ -19,7 +19,7 @@ const tommorowDate = incrementDate(currentDate, 1);
 
 
 
- app.delete('/testing/all-data', (req: Request, res: Response) => {
+ app.delete("/testing/all-data", (req: Request, res: Response) => {
   dbVideos.splice(0, dbVideos.length)
    res.sendStatus(204)               //send(httpStatusCodes.NO_CONTEND_204)
   }
@@ -34,7 +34,7 @@ app.get('/videos', (req: Request, res: Response) => {
 })
 
 app.post('/videos', (req: Request, res: Response) => {
-  res.send(dbVideos)
+  
   let title =req.body.title;                                        // Как записать если нет и автора и тайтл
   if(!title || typeof title !== 'string' || title.length>40)
   res.status(httpStatusCodes.BAD_REQUEST_400).send({
@@ -69,7 +69,8 @@ app.post('/videos', (req: Request, res: Response) => {
     publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
-  dbVideos.push(UpdateVideosModels);                                        
+  dbVideos.push(UpdateVideosModels); 
+  res.send(dbVideos)                                       
                  
  });
 app.put('/videos/:id', (req: Request, res: Response) => {
