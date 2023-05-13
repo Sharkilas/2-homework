@@ -31,22 +31,22 @@ app.post('/videos', (req, res) => {
     const errors = [];
     let title = req.body.title;
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
-        errors.push({ 'message': "incorrect title",
-            "field": "title"
+        errors.push({ message: "incorrect title",
+            field: "title"
         });
     }
     let author = req.body.author;
     if (!author || typeof author !== 'string' || author.length > 20) {
         errors.push({
-            'message': "incorrect author",
-            "field": "author"
+            message: "incorrect author",
+            field: "author"
         });
     }
     let availableResolutions = req.body.availableResolutions;
     if (!availableResolutions || !Array.isArray(availableResolutions)) {
         errors.push({
-            'message': "incorrect availableResolutions",
-            "field": "availableResolutions"
+            message: "incorrect availableResolutions",
+            field: "availableResolutions"
         });
     }
     if (errors.length > 0) {
@@ -74,35 +74,35 @@ app.put('/videos/:id', (req, res) => {
     const errors = [];
     let title = req.body.title;
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
-        errors.push({ 'message': "incorrect title",
-            "field": "title"
+        errors.push({ message: "incorrect title",
+            field: "title"
         });
     }
     let author = req.body.author;
     if (!author || typeof author !== 'string' || author.length > 20) {
         errors.push({
-            'message': "incorrect author",
-            "field": "author"
+            message: "incorrect author",
+            field: "author"
         });
     }
     let canBeDownloaded = req.body.author;
     if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
         errors.push({
-            'message': "canBeDownloaded",
-            "field": "canBeDownloaded"
+            message: "canBeDownloaded",
+            field: "canBeDownloaded"
         });
     }
     let minAgeRestriction = req.body.minAgeRestriction;
     if (!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18) {
-        errors.push({ 'message': "incorrect minAgeRestriction",
-            "field": "minAgeRestriction"
+        errors.push({ message: "incorrect minAgeRestriction",
+            field: "minAgeRestriction"
         });
     }
     let availableResolutions = req.body.availableResolutions;
     if (!availableResolutions || !Array.isArray(availableResolutions)) {
         errors.push({
-            'message': "incorrect availableResolutions",
-            "field": "availableResolutions"
+            message: "incorrect availableResolutions",
+            field: "availableResolutions"
         });
     }
     if (errors.length > 0) {
