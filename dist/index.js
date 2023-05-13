@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = require("./http-status-codes/http-status-codes");
+const Videomodels_1 = require("./models/Videomodels");
 const dbVideosRep_1 = require("./repositories/dbVideosRep");
 const app = (0, express_1.default)();
 const port = 3003;
@@ -42,8 +43,7 @@ app.post('/videos', (req, res) => {
             field: "author"
         });
     }
-    let availableResolutions = req.body.availableResolutions;
-    if (!availableResolutions || !Array.isArray(availableResolutions)) {
+    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"
@@ -98,8 +98,7 @@ app.put('/videos/:id', (req, res) => {
             field: "minAgeRestriction"
         });
     }
-    let availableResolutions = req.body.availableResolutions;
-    if (!availableResolutions || !Array.isArray(availableResolutions)) {
+    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"

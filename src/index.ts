@@ -1,6 +1,6 @@
 import express, {Response, Request} from 'express';
 import { httpStatusCodes } from './http-status-codes/http-status-codes';
-import { VideosModels } from './models/Videomodels';
+import { dbavailableResolutions, VideosModels } from './models/Videomodels';
 import { db, } from './repositories/dbVideosRep';
 const app = express()
 const port = 3003
@@ -47,8 +47,8 @@ errors.push({message: "incorrect title",
               message: "incorrect author",
               field: "author"
               })}
-  let availableResolutions =req.body.availableResolutions;                                       
-  if(!availableResolutions || !Array.isArray(availableResolutions)){
+                                    
+  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
@@ -100,8 +100,7 @@ errors.push({message: "incorrect title",
  errors.push({message: "incorrect minAgeRestriction",
              field: "minAgeRestriction"
                                      })}
-  let availableResolutions =req.body.availableResolutions;                                       
-  if(!availableResolutions || !Array.isArray(availableResolutions)){
+if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
