@@ -122,13 +122,13 @@ app.put('/videos/:id', (req, res) => {
     res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(newVideo);
     return;
 });
-app.get('/videos/id', (req, res) => {
-    const video = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
-    if (video) {
-        res.status(http_status_codes_1.httpStatusCodes.OK_200).send(video);
+app.get('/videos/:id', (req, res) => {
+    const videoId = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
+    if (videoId) {
+        res.send(videoId);
     }
     else {
-        res.sendStatus(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
+        res.sendStatus(404);
     }
 });
 app.delete('/videos/:id', (req, res) => {

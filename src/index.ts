@@ -127,12 +127,12 @@ errors.push({'message': "incorrect title",
    
                   
 
-app.get('/videos/id', (req: Request, res: Response) => {
-  const video = db.videos.find(v=>v.id === +req.params.id)
-  if (video) {
-    res.status(httpStatusCodes.OK_200).send(video)
+app.get('/videos/:id', (req: Request, res: Response) => {
+  const videoId = db.videos.find(v=>v.id === +req.params.id)
+  if (videoId) {
+    res.send(videoId)
   } else {
-    res.sendStatus(httpStatusCodes.NOT_FOUND_404)
+    res.sendStatus(404)
   }
   
   
