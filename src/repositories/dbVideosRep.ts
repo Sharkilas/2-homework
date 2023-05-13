@@ -1,7 +1,7 @@
 import { VideosModels } from "../models/Videomodels"
 
 type dbVideos = Array<VideosModels> 
-export const dbVideos =[
+export const db: {videos: VideosModels[]} ={videos: [
     {id: 1,
     title:	"string-1",
     author:	"string-1",
@@ -19,4 +19,4 @@ export const dbVideos =[
       createdAt:	"2023-05-08T10:49:49.732Z",
       publicationDate:	'2023-05-09T10:49:49.732Z',
       availableResolutions: ['P144', 'P360']},
-  ]
+  ]}

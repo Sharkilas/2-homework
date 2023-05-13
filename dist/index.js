@@ -18,41 +18,41 @@ const incrementDate = (date, days) => {
 };
 const tommorowDate = incrementDate(currentDate, 1);
 app.delete("/testing/all-data", (req, res) => {
-    dbVideosRep_1.dbVideos.splice(0, dbVideosRep_1.dbVideos.length);
+    dbVideosRep_1.db.videos = [];
     res.sendStatus(204); //send(httpStatusCodes.NO_CONTEND_204)
 });
 app.get('/', (req, res) => {
     res.send('Доброе утро!');
 });
 app.get('/videos', (req, res) => {
-    res.send(dbVideosRep_1.dbVideos); //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
+    res.status(200).send(dbVideosRep_1.db.videos); //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
 });
 app.post('/videos', (req, res) => {
-    let title = req.body.title; // Как записать если нет и автора и тайтл
-    if (!title || typeof title !== 'string' || title.length > 40)
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect title",
-                    "field": "tile"
-                }]
+    const errors = [];
+    let title = req.body.title;
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+        errors.push({ 'message': "incorrect title",
+            "field": "title"
         });
-    let author = req.body.author; // Как записать если нет и автора и тайтл
-    if (!author || typeof author !== 'string' || author.length > 20)
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect author",
-                    "field": "author"
-                }]
+    }
+    let author = req.body.author;
+    if (!author || typeof author !== 'string' || author.length > 20) {
+        errors.push({
+            'message': "incorrect author",
+            "field": "author"
         });
-    let availableResolutions = req.body.availableResolutions; // Как записать если нет и автора и тайтл
-    if (!availableResolutions || !Array.isArray(availableResolutions))
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect availableResolutions",
-                    "field": "availableResolutions"
-                }]
+    }
+    let availableResolutions = req.body.availableResolutions;
+    if (!availableResolutions || !Array.isArray(availableResolutions)) {
+        errors.push({
+            'message': "incorrect availableResolutions",
+            "field": "availableResolutions"
         });
-    let UpdateVideosModels = {
+    }
+    if (errors.length > 0) {
+        return res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({ errorsMessages: errors });
+    }
+    const newVideo = {
         id: +currentDate,
         title: req.body.title,
         author: req.body.author,
@@ -62,79 +62,83 @@ app.post('/videos', (req, res) => {
         publicationDate: tommorowDate.toISOString(),
         createdAt: currentDate.toISOString(),
     };
-    dbVideosRep_1.dbVideos.push(UpdateVideosModels);
-    res.send(dbVideosRep_1.dbVideos);
+    dbVideosRep_1.db.videos.push(newVideo);
+    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(newVideo);
+    return;
 });
 app.put('/videos/:id', (req, res) => {
-    let foundVideos = (dbVideosRep_1.dbVideos.find(v => v.id === +req.params.id));
-    if (!foundVideos) {
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "video not found",
-                    "field": "canBeDownloaded"
-                }]
-        });
+    const video = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
+    if (!video) {
+        return res.sendStatus(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
     }
+    const errors = [];
     let title = req.body.title;
-    if (!title || title.length > 40 || typeof title !== "string") {
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect title",
-                    "field": "tile"
-                }]
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+        errors.push({ 'message': "incorrect title",
+            "field": "title"
         });
     }
     let author = req.body.author;
-    if (!author || typeof author !== 'string' || author.length > 20)
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect author",
-                    "field": "author"
-                }]
+    if (!author || typeof author !== 'string' || author.length > 20) {
+        errors.push({
+            'message': "incorrect author",
+            "field": "author"
         });
-    let availableResolutions = req.body.availableResolutions; // Как записать если нет и автора и тайтл
+    }
+    let canBeDownloaded = req.body.author;
+    if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
+        errors.push({
+            'message': "canBeDownloaded",
+            "field": "canBeDownloaded"
+        });
+    }
+    let minAgeRestriction = req.body.minAgeRestriction;
+    if (!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18) {
+        errors.push({ 'message': "incorrect minAgeRestriction",
+            "field": "minAgeRestriction"
+        });
+    }
+    let availableResolutions = req.body.availableResolutions;
     if (!availableResolutions || !Array.isArray(availableResolutions)) {
-        res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({
-            errorMessage: [{
-                    'message': "incorrect availableResolutions",
-                    "field": "availableResolutions"
-                }]
+        errors.push({
+            'message': "incorrect availableResolutions",
+            "field": "availableResolutions"
         });
     }
-    else {
-        //foundVideos.title = req.body.title
-        res.json(foundVideos);
-        let UpdateVideosModels = {
-            id: +currentDate,
-            title: req.body.title,
-            author: req.body.author,
-            availableResolutions: req.body.availableResolutions,
-            canBeDownloaded: req.body.canBeDownloaded,
-            minAgeRestriction: req.body.minAgeRestriction,
-            publicationDate: tommorowDate.toISOString(),
-            createdAt: currentDate.toISOString()
-        };
-        dbVideosRep_1.dbVideos.push(UpdateVideosModels);
+    if (errors.length > 0) {
+        return res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({ errorsMessages: errors });
     }
+    const newVideo = {
+        id: +currentDate,
+        title: req.body.title,
+        author: req.body.author,
+        availableResolutions: req.body.availableResolutions,
+        canBeDownloaded: req.body.canBeDownloaded,
+        minAgeRestriction: req.body.minAgeRestriction,
+        publicationDate: tommorowDate.toISOString(),
+        createdAt: currentDate.toISOString(),
+    };
+    dbVideosRep_1.db.videos.push(newVideo);
+    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(newVideo);
+    return;
 });
 app.get('/videos/id', (req, res) => {
-    let video = dbVideosRep_1.dbVideos.find(p => p.id === +req.params.id);
+    const video = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
     if (video) {
-        res.send(video).send(http_status_codes_1.httpStatusCodes.OK_200);
+        res.status(http_status_codes_1.httpStatusCodes.OK_200).send(video);
     }
     else {
-        res.send(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
+        res.sendStatus(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
     }
 });
 app.delete('/videos/:id', (req, res) => {
-    let video = dbVideosRep_1.dbVideos.find(p => p.id === +req.params.id);
+    const video = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
     if (video) {
-        dbVideosRep_1.dbVideos.filter(v => v.id !== +req.params.id);
-        res.send(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
+        dbVideosRep_1.db.videos = dbVideosRep_1.db.videos.filter(v => v.id !== video.id); // dbVideos.filter(p=>p.id !== +req.params.id) - так не получилось
+        res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
     }
     else
-        res.send(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
-    res.send(dbVideosRep_1.dbVideos);
+        res.sendStatus(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

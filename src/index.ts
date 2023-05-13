@@ -1,7 +1,7 @@
 import express, {Response, Request} from 'express';
 import { httpStatusCodes } from './http-status-codes/http-status-codes';
 import { VideosModels } from './models/Videomodels';
-import { dbVideos } from './repositories/dbVideosRep';
+import { db, } from './repositories/dbVideosRep';
 const app = express()
 const port = 3003
 
@@ -20,7 +20,8 @@ const tommorowDate = incrementDate(currentDate, 1);
 
 
  app.delete("/testing/all-data", (req: Request, res: Response) => {
-  dbVideos.splice(0, dbVideos.length)
+  
+  db.videos = []
    res.sendStatus(204)               //send(httpStatusCodes.NO_CONTEND_204)
   }
 )
@@ -30,36 +31,32 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.get('/videos', (req: Request, res: Response) => {
-  res.send(dbVideos)                   //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
+  res.status(200).send(db.videos)                   //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
 })
 
 app.post('/videos', (req: Request, res: Response) => {
-  
-  let title =req.body.title;                                        // Как записать если нет и автора и тайтл
-  if(!title || typeof title !== 'string' || title.length>40)
-  res.status(httpStatusCodes.BAD_REQUEST_400).send({
-                    errorMessage: [{
-                      'message': "incorrect title",
-                      "field": "tile"
-                    }]}
-                    );
-  let author =req.body.author;                                        // Как записать если нет и автора и тайтл
-  if(!author || typeof author !== 'string' || author.length>20)
-  res.status(httpStatusCodes.BAD_REQUEST_400).send({
-                    errorMessage: [{
-                      'message': "incorrect author",
-                      "field": "author"
-                    }]}
-                    )
-  let availableResolutions =req.body.availableResolutions;                                        // Как записать если нет и автора и тайтл
-  if(!availableResolutions || !Array.isArray(availableResolutions))
-  res.status(httpStatusCodes.BAD_REQUEST_400).send({
-                    errorMessage: [{
+  const errors = []
+  let title = req.body.title;                                        
+  if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
+errors.push({'message': "incorrect title",
+            "field": "title"
+            })}
+  let author =req.body.author;                                        
+  if(!author || typeof author !== 'string' || author.length>20){
+  errors.push({
+              'message': "incorrect author",
+              "field": "author"
+              })}
+  let availableResolutions =req.body.availableResolutions;                                       
+  if(!availableResolutions || !Array.isArray(availableResolutions)){
+                    errors.push({
                       'message': "incorrect availableResolutions",
                       "field": "availableResolutions"
-                    }]}
-                    )
-  let UpdateVideosModels = {
+                    })}
+  if(errors.length > 0) {
+    return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
+  }
+  const newVideo: VideosModels = {
     id:	+currentDate,
     title:	req.body.title,
     author:	req.body.author,
@@ -69,87 +66,85 @@ app.post('/videos', (req: Request, res: Response) => {
     publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
-  dbVideos.push(UpdateVideosModels); 
-  res.send(dbVideos)                                       
-                 
+  db.videos.push(newVideo); 
+  res.status(httpStatusCodes.CREATED_201).send(newVideo)                                       
+   return              
  });
+
 app.put('/videos/:id', (req: Request, res: Response) => {
  
-let foundVideos =(dbVideos.find(v=> v.id === +req.params.id))                
-if (!foundVideos) {
-res.status(httpStatusCodes.BAD_REQUEST_400).send({
-  errorMessage: [{
-    'message': "video not found",
-    "field": "canBeDownloaded"
-  }]}
-  );
+const video = db.videos.find(v=> v.id === +req.params.id)     
+if (!video) {
+ return res.sendStatus(httpStatusCodes.NOT_FOUND_404)
 }
-let title = req.body.title
- if (!title || title.length > 40 || typeof title !== "string") {
- res.status(httpStatusCodes.BAD_REQUEST_400).send({
-  errorMessage: [{
-    'message': "incorrect title",
-    "field": "tile"
-  }]}
-  );
- }
- let author =req.body.author;  
- if(!author || typeof author !== 'string' || author.length>20)                   
- res.status(httpStatusCodes.BAD_REQUEST_400).send({
-                   errorMessage: [{
-                     'message': "incorrect author",
-                     "field": "author"
-                   }]}
-                   )
- let availableResolutions =req.body.availableResolutions;                                        // Как записать если нет и автора и тайтл
- if(!availableResolutions || !Array.isArray(availableResolutions)){
- res.status(httpStatusCodes.BAD_REQUEST_400).send({
-                   errorMessage: [{
-                     'message': "incorrect availableResolutions",
-                     "field": "availableResolutions"
-                   }]}
-                   )}
+const errors = []
+  let title = req.body.title;                                        
+  if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
+errors.push({'message': "incorrect title",
+                    "field": "title"
+                  })}
+  let author =req.body.author;                                        
+  if(!author || typeof author !== 'string' || author.length>20){
+  errors.push({
+                      'message': "incorrect author",
+                      "field": "author"
+                    })}
+  let canBeDownloaded =req.body.author;                                        
+  if(!canBeDownloaded || typeof canBeDownloaded !== 'boolean'){
+  errors.push({
+                           'message': "canBeDownloaded",
+                           "field": "canBeDownloaded"
+                     })}
+ let minAgeRestriction = req.body.minAgeRestriction;                                        
+ if(!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction >18){  
+ errors.push({'message': "incorrect minAgeRestriction",
+             "field": "minAgeRestriction"
+                                     })}
+  let availableResolutions =req.body.availableResolutions;                                       
+  if(!availableResolutions || !Array.isArray(availableResolutions)){
+                    errors.push({
+                      'message': "incorrect availableResolutions",
+                      "field": "availableResolutions"
+                    })}
+  if(errors.length > 0) {
+    return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
+  }
+  const newVideo: VideosModels = {
+    id:	+currentDate,
+    title:	req.body.title,
+    author:	req.body.author,
+    availableResolutions: req.body.availableResolutions, 
+    canBeDownloaded: req.body.canBeDownloaded,
+    minAgeRestriction:	req.body.minAgeRestriction,         
+    publicationDate:	tommorowDate.toISOString(),                                       
+    createdAt: currentDate.toISOString(),
+  }
+  db.videos.push(newVideo); 
+  res.status(httpStatusCodes.CREATED_201).send(newVideo)                                       
+  return });
 
- else {
 
-                                                                 //foundVideos.title = req.body.title
-res.json(foundVideos)
-let UpdateVideosModels = {
-  id:	+currentDate,
-  title:	req.body.title,
-  author:	req.body.author,
-  availableResolutions: req.body.availableResolutions, 
-  canBeDownloaded: req.body.canBeDownloaded,
-  minAgeRestriction:	req.body.minAgeRestriction,           
-  publicationDate:	tommorowDate.toISOString(),                                                                    
-  createdAt: currentDate.toISOString()
-}
-
-dbVideos.push(UpdateVideosModels); 
-}
-})
    
                   
 
 app.get('/videos/id', (req: Request, res: Response) => {
-  let video = dbVideos.find(p=>p.id === +req.params.id)
+  const video = db.videos.find(v=>v.id === +req.params.id)
   if (video) {
-    res.send(video).send(httpStatusCodes.OK_200)
+    res.status(httpStatusCodes.OK_200).send(video)
+  } else {
+    res.sendStatus(httpStatusCodes.NOT_FOUND_404)
   }
-  else {res.send(httpStatusCodes.NOT_FOUND_404)}
   
   
 })
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
-  let video = dbVideos.find(p=>p.id === +req.params.id)
+  const video = db.videos.find(v=>v.id === +req.params.id)
   if (video) {
-    dbVideos.filter(v=>v.id !== +req.params.id)
-    res.send(httpStatusCodes.NO_CONTEND_204)
+    db.videos = db.videos.filter(v=> v.id !== video.id)               // dbVideos.filter(p=>p.id !== +req.params.id) - так не получилось
+    res.sendStatus(httpStatusCodes.NO_CONTEND_204)
   }
-  else res.send(httpStatusCodes.NOT_FOUND_404)
-  
-  res.send(dbVideos)
+  else res.sendStatus(httpStatusCodes.NOT_FOUND_404)
 })
 
   
