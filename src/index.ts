@@ -89,7 +89,7 @@ errors.push({message: "incorrect title",
                       message: "incorrect author",
                       field: "author"
                     })}
-  let canBeDownloaded =req.body.author;                                        
+  let canBeDownloaded =req.body.canBeDownloaded;                                        
   if(!canBeDownloaded || typeof canBeDownloaded !== 'boolean'){
   errors.push({
                            message: "canBeDownloaded",

@@ -85,7 +85,7 @@ app.put('/videos/:id', (req, res) => {
             field: "author"
         });
     }
-    let canBeDownloaded = req.body.author;
+    let canBeDownloaded = req.body.canBeDownloaded;
     if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
         errors.push({
             message: "canBeDownloaded",
