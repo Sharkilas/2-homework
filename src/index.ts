@@ -62,7 +62,7 @@ errors.push({'message': "incorrect title",
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
     canBeDownloaded: req.body.canBeDownloaded,
-    minAgeRestriction:	req.body.minAgeRestriction,         
+    minAgeRestriction:	null,         
     publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
