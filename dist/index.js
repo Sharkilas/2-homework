@@ -122,8 +122,7 @@ app.put('/videos/:id', (req, res) => {
         availableResolutions: req.body.availableResolutions,
         canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
         minAgeRestriction: req.body.minAgeRestriction,
-        publicationDate: tommorowDate.toISOString(),
-        createdAt: currentDate.toISOString(),
+        publicationDate: tommorowDate.toISOString() || req.body.publicationDate,
     };
     res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204).send(newVideo);
     return;
