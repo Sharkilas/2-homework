@@ -96,7 +96,7 @@ errors.push({message: "incorrect title",
                            field: "canBeDownloaded"
                      })}
  let publicationDate =req.body.publicationDate;                                        
- if(publicationDate || typeof publicationDate !== 'string'){
+ if(publicationDate && typeof publicationDate !== 'string'){
  errors.push({
                             message: "incorrect publicationDate",
                             field: "publicationDate"
