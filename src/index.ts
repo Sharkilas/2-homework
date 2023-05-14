@@ -48,7 +48,7 @@ errors.push({message: "incorrect title",
               field: "author"
               })}
                                     
-  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) == false ){
+  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) === false ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
@@ -100,7 +100,7 @@ errors.push({message: "incorrect title",
  errors.push({message: "incorrect minAgeRestriction",
              field: "minAgeRestriction"
                                      })}
-if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)||!dbavailableResolutions.includes(req.body.availableResolutions) == false ){
+if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)||dbavailableResolutions.includes(req.body.availableResolutions) === false ){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
@@ -113,13 +113,13 @@ if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolution
     title:	req.body.title,
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
-    canBeDownloaded: req.body.canBeDownloaded,
+    canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
     minAgeRestriction:	req.body.minAgeRestriction,         
     publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
   db.videos.push(newVideo); 
-  res.status(httpStatusCodes.CREATED_201).send(newVideo)                                       
+  res.status(httpStatusCodes.NO_CONTEND_204).send(newVideo)                                       
   return });
 
 

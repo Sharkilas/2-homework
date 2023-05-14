@@ -43,7 +43,7 @@ app.post('/videos', (req, res) => {
             field: "author"
         });
     }
-    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) == false) {
+    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) === false) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"
@@ -98,7 +98,7 @@ app.put('/videos/:id', (req, res) => {
             field: "minAgeRestriction"
         });
     }
-    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) == false) {
+    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) === false) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"
@@ -112,13 +112,13 @@ app.put('/videos/:id', (req, res) => {
         title: req.body.title,
         author: req.body.author,
         availableResolutions: req.body.availableResolutions,
-        canBeDownloaded: req.body.canBeDownloaded,
+        canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
         minAgeRestriction: req.body.minAgeRestriction,
         publicationDate: tommorowDate.toISOString(),
         createdAt: currentDate.toISOString(),
     };
     dbVideosRep_1.db.videos.push(newVideo);
-    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(newVideo);
+    res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204).send(newVideo);
     return;
 });
 app.get('/videos/:id', (req, res) => {
