@@ -78,7 +78,9 @@ if (!video) {
  return res.sendStatus(httpStatusCodes.NOT_FOUND_404)
 }
 const errors = []
-  let title = req.body.title;                                        
+ 
+
+ let title = req.body.title; 
   if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
 errors.push({message: "incorrect title",
               field: "title"
@@ -117,8 +119,7 @@ errors.push({message: "incorrect title",
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
-  const newVideo: VideosModels = {
-    id:	+currentDate,
+  const newVideo = {
     title:	req.body.title,
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
@@ -127,7 +128,6 @@ errors.push({message: "incorrect title",
     publicationDate:	tommorowDate.toISOString(),                                       
     createdAt: currentDate.toISOString(),
   }
-  db.videos.push(newVideo); 
   res.status(httpStatusCodes.NO_CONTEND_204).send(newVideo)                                       
   return });
 

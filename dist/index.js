@@ -117,7 +117,6 @@ app.put('/videos/:id', (req, res) => {
         return res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({ errorsMessages: errors });
     }
     const newVideo = {
-        id: +currentDate,
         title: req.body.title,
         author: req.body.author,
         availableResolutions: req.body.availableResolutions,
@@ -126,7 +125,6 @@ app.put('/videos/:id', (req, res) => {
         publicationDate: tommorowDate.toISOString(),
         createdAt: currentDate.toISOString(),
     };
-    dbVideosRep_1.db.videos.push(newVideo);
     res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204).send(newVideo);
     return;
 });
