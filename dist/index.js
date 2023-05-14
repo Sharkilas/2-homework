@@ -93,7 +93,7 @@ app.put('/videos/:id', (req, res) => {
             field: "canBeDownloaded"
         });
     }
-    let publicationDate = req.body.canBeDownloaded;
+    let publicationDate = req.body.publicationDate;
     if (!publicationDate || typeof publicationDate !== 'string') {
         errors.push({
             message: "incorrect publicationDate",
