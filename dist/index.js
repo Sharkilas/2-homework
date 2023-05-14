@@ -94,7 +94,7 @@ app.put('/videos/:id', (req, res) => {
         });
     }
     let publicationDate = req.body.publicationDate;
-    if (!publicationDate || typeof publicationDate !== 'string') {
+    if (publicationDate || typeof publicationDate !== 'string') {
         errors.push({
             message: "incorrect publicationDate",
             field: "publicationDate"
