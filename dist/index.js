@@ -43,7 +43,8 @@ app.post('/videos', (req, res) => {
             field: "author"
         });
     }
-    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) === false) {
+    let qualityVideos = req.body.availableResolutions;
+    if (!qualityVideos || !Array.isArray(qualityVideos) || !(0, Videomodels_1.qualityCheck)(qualityVideos, Videomodels_1.dbavailableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"
@@ -98,7 +99,8 @@ app.put('/videos/:id', (req, res) => {
             field: "minAgeRestriction"
         });
     }
-    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) === false) {
+    let qualityVideos = req.body.availableResolutions;
+    if (!qualityVideos || !Array.isArray(qualityVideos) || !(0, Videomodels_1.qualityCheck)(qualityVideos, Videomodels_1.dbavailableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"

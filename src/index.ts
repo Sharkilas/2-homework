@@ -1,6 +1,6 @@
 import express, {Response, Request} from 'express';
 import { httpStatusCodes } from './http-status-codes/http-status-codes';
-import { dbavailableResolutions, VideosModels } from './models/Videomodels';
+import { dbavailableResolutions, qualityCheck, VideosModels } from './models/Videomodels';
 import { db, } from './repositories/dbVideosRep';
 const app = express()
 const port = 3003
@@ -47,8 +47,8 @@ errors.push({message: "incorrect title",
               message: "incorrect author",
               field: "author"
               })}
-                                    
-  if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)|| !dbavailableResolutions.includes(req.body.availableResolutions) === false ){
+    let qualityVideos = req.body.availableResolutions;                                
+  if(!qualityVideos || !Array.isArray(qualityVideos)|| !qualityCheck(qualityVideos, dbavailableResolutions)){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
@@ -100,7 +100,8 @@ errors.push({message: "incorrect title",
  errors.push({message: "incorrect minAgeRestriction",
              field: "minAgeRestriction"
                                      })}
-if(!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions)||dbavailableResolutions.includes(req.body.availableResolutions) === false ){
+ let qualityVideos = req.body.availableResolutions;                                
+ if(!qualityVideos || !Array.isArray(qualityVideos)|| !qualityCheck(qualityVideos, dbavailableResolutions)){
                     errors.push({
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
