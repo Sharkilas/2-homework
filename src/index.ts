@@ -92,9 +92,17 @@ errors.push({message: "incorrect title",
   let canBeDownloaded =req.body.canBeDownloaded;                                        
   if(!canBeDownloaded || typeof canBeDownloaded !== 'boolean'){
   errors.push({
-                           message: "canBeDownloaded",
+                           message: "incorrect canBeDownloaded",
                            field: "canBeDownloaded"
                      })}
+ let publicationDate =req.body.canBeDownloaded;                                        
+ if(!publicationDate || typeof publicationDate !== 'string'){
+ errors.push({
+                            message: "incorrect publicationDate",
+                            field: "publicationDate"
+                                        })}
+
+
  let minAgeRestriction = req.body.minAgeRestriction;                                        
  if(!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction >18){  
  errors.push({message: "incorrect minAgeRestriction",
