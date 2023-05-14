@@ -57,7 +57,7 @@ app.post('/videos', (req, res) => {
         title: req.body.title,
         author: req.body.author,
         availableResolutions: req.body.availableResolutions,
-        canBeDownloaded: req.body.canBeDownloaded,
+        canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
         minAgeRestriction: null,
         publicationDate: tommorowDate.toISOString(),
         createdAt: currentDate.toISOString(),
@@ -98,7 +98,7 @@ app.put('/videos/:id', (req, res) => {
             field: "minAgeRestriction"
         });
     }
-    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) == false) {
+    if (!req.body.availableResolutions || !Array.isArray(req.body.availableResolutions) || !Videomodels_1.dbavailableResolutions.includes(req.body.availableResolutions) == false) {
         errors.push({
             message: "incorrect availableResolutions",
             field: "availableResolutions"
