@@ -136,12 +136,13 @@ errors.push({message: "incorrect title",
     minAgeRestriction:	null,         
     }
     const resultVideo = {
-      ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива
+      ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
     }
   
     
   res.status(httpStatusCodes.CREATED_201).send(resultVideo)                                       
    return   
+  })
    //  video.title =	req.body.title,                                через присваивание каждому эллементу 
    // video.author =	req.body.author,                       
    // video.availableResolutions = req.body.availableResolutions, 
@@ -150,8 +151,8 @@ errors.push({message: "incorrect title",
    // video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
    
    
-  res.status(httpStatusCodes.NO_CONTEND_204)                                     
-  return });
+  //res.status(httpStatusCodes.CREATED_201)                                     
+  //return });
 
 
    

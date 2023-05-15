@@ -126,19 +126,19 @@ app.put('/videos/:id', (req, res) => {
         canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
         minAgeRestriction: null,
     };
-    const resultVideo = Object.assign(Object.assign({}, video), newVideo // копирование свойств первого массива из свойств второго массива
+    const resultVideo = Object.assign(Object.assign({}, video), newVideo // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
     );
     res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(resultVideo);
     return;
-    //  video.title =	req.body.title,                                через присваивание каждому эллементу 
-    // video.author =	req.body.author,                       
-    // video.availableResolutions = req.body.availableResolutions, 
-    // video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-    // video.minAgeRestriction =	req.body.minAgeRestriction,         
-    // video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
-    res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
-    return;
 });
+//  video.title =	req.body.title,                                через присваивание каждому эллементу 
+// video.author =	req.body.author,                       
+// video.availableResolutions = req.body.availableResolutions, 
+// video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+// video.minAgeRestriction =	req.body.minAgeRestriction,         
+// video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
+//res.status(httpStatusCodes.CREATED_201)                                     
+//return });
 app.get('/videos/:id', (req, res) => {
     const videoId = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
     if (videoId) {
