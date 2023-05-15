@@ -134,7 +134,7 @@ errors.push({message: "incorrect title",
     }
   
     
-  res.status(httpStatusCodes.CREATED_201).send(resultVideo)                                       
+  res.status(httpStatusCodes.NO_CONTEND_204).send(resultVideo)                                       
    return   
    //  video.title =	req.body.title,                                через присваивание каждому эллементу 
    // video.author =	req.body.author,                       

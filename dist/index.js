@@ -124,7 +124,7 @@ app.put('/videos/:id', (req, res) => {
         minAgeRestriction: null,
     };
     const resultVideo = Object.assign(Object.assign({}, video), newVideo);
-    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(resultVideo);
+    res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204).send(resultVideo);
     return;
     //  video.title =	req.body.title,                                через присваивание каждому эллементу 
     // video.author =	req.body.author,                       
