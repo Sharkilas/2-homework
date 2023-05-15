@@ -85,8 +85,7 @@ let publicationDate =req.body.publicationDate;
 let author =req.body.author; 
 let minAgeRestriction = req.body.minAgeRestriction;
 let qualityVideos = req.body.availableResolutions;
-if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length <0 )                                        
- {return res.sendStatus(httpStatusCodes.NO_CONTEND_204)}
+
  
  if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
 errors.push({message: "incorrect title",
@@ -126,6 +125,9 @@ errors.push({message: "incorrect title",
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
+  if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
+ {return res.sendStatus(httpStatusCodes.NO_CONTEND_204)}
+
     const newVideo: UpdateVideosModels = {
     title:	req.body.title,
     author:	req.body.author,
