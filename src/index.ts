@@ -122,13 +122,26 @@ errors.push({message: "incorrect title",
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
+  const newVideo: UpdateVideosModels = {
+    title:	req.body.title,
+    author:	req.body.author,
+    availableResolutions: req.body.availableResolutions, 
+    canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+    minAgeRestriction:	null,         
+    }
+    const resultVideo = {
+      ...video,...newVideo
+    }
   
-    video.title =	req.body.title,
-    video.author =	req.body.author,
-    video.availableResolutions = req.body.availableResolutions, 
-    video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-    video.minAgeRestriction =	req.body.minAgeRestriction,         
-    video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
+    
+  res.status(httpStatusCodes.CREATED_201).send(resultVideo)                                       
+   return   
+   //  video.title =	req.body.title,                                через присваивание каждому эллементу 
+   // video.author =	req.body.author,                       
+   // video.availableResolutions = req.body.availableResolutions, 
+   // video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+   // video.minAgeRestriction =	req.body.minAgeRestriction,         
+   // video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
    
    
   res.status(httpStatusCodes.NO_CONTEND_204)                                     

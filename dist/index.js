@@ -116,13 +116,23 @@ app.put('/videos/:id', (req, res) => {
     if (errors.length > 0) {
         return res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({ errorsMessages: errors });
     }
-    video.title = req.body.title,
-        video.author = req.body.author,
-        video.availableResolutions = req.body.availableResolutions,
-        video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-        video.minAgeRestriction = req.body.minAgeRestriction,
-        video.publicationDate = tommorowDate.toISOString() || req.body.publicationDate,
-        res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
+    const newVideo = {
+        title: req.body.title,
+        author: req.body.author,
+        availableResolutions: req.body.availableResolutions,
+        canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+        minAgeRestriction: null,
+    };
+    const resultVideo = Object.assign(Object.assign({}, video), newVideo);
+    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(resultVideo);
+    return;
+    //  video.title =	req.body.title,                                через присваивание каждому эллементу 
+    // video.author =	req.body.author,                       
+    // video.availableResolutions = req.body.availableResolutions, 
+    // video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+    // video.minAgeRestriction =	req.body.minAgeRestriction,         
+    // video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
+    res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
     return;
 });
 app.get('/videos/:id', (req, res) => {
