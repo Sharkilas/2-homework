@@ -79,28 +79,32 @@ if (!video) {
  return res.sendStatus(httpStatusCodes.NOT_FOUND_404)
 }
 const errors = []
-                                         
+let title = req.body.title;
+let canBeDownloaded =req.body.canBeDownloaded;  
+let publicationDate =req.body.publicationDate; 
+let author =req.body.author; 
+let minAgeRestriction = req.body.minAgeRestriction;
+let qualityVideos = req.body.availableResolutions;
+if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length <0 )                                        
+ {return res.sendStatus(httpStatusCodes.NO_CONTEND_204)}
  
- 
-
- let title = req.body.title; 
-  if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
+ if(!title || typeof title !== 'string' || !title.trim() || title.length>40){  
 errors.push({message: "incorrect title",
               field: "title"
                   })}
-  let author =req.body.author;                                        
+                                         
   if(!author || typeof author !== 'string' || author.length>20){
   errors.push({
                       message: "incorrect author",
                       field: "author"
                     })}
-  let canBeDownloaded =req.body.canBeDownloaded;                                        
+                                        
   if(!canBeDownloaded || typeof canBeDownloaded !== 'boolean'){
   errors.push({
                            message: "incorrect canBeDownloaded",
                            field: "canBeDownloaded"
                      })}
- let publicationDate =req.body.publicationDate;                                        
+                                      
  if(publicationDate && typeof publicationDate !== 'string'){
  errors.push({
                             message: "incorrect publicationDate",
@@ -108,12 +112,12 @@ errors.push({message: "incorrect title",
                                         })}
 
 
- let minAgeRestriction = req.body.minAgeRestriction;                                        
+                                         
  if(!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction >18){  
  errors.push({message: "incorrect minAgeRestriction",
              field: "minAgeRestriction"
                                      })}
- let qualityVideos = req.body.availableResolutions;                                
+                                 
  if(!qualityVideos || !Array.isArray(qualityVideos)|| !qualityCheck(qualityVideos, dbavailableResolutions)){
                     errors.push({
                       message: "incorrect availableResolutions",
@@ -122,7 +126,7 @@ errors.push({message: "incorrect title",
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
-  const newVideo: UpdateVideosModels = {
+    const newVideo: UpdateVideosModels = {
     title:	req.body.title,
     author:	req.body.author,
     availableResolutions: req.body.availableResolutions, 
@@ -130,11 +134,11 @@ errors.push({message: "incorrect title",
     minAgeRestriction:	null,         
     }
     const resultVideo = {
-      ...video,...newVideo
+      ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива
     }
   
     
-  res.status(httpStatusCodes.NO_CONTEND_204).send(resultVideo)                                       
+  res.status(httpStatusCodes.CREATED_201).send(resultVideo)                                       
    return   
    //  video.title =	req.body.title,                                через присваивание каждому эллементу 
    // video.author =	req.body.author,                       

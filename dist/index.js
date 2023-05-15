@@ -74,39 +74,42 @@ app.put('/videos/:id', (req, res) => {
     }
     const errors = [];
     let title = req.body.title;
+    let canBeDownloaded = req.body.canBeDownloaded;
+    let publicationDate = req.body.publicationDate;
+    let author = req.body.author;
+    let minAgeRestriction = req.body.minAgeRestriction;
+    let qualityVideos = req.body.availableResolutions;
+    if (title.length || canBeDownloaded.length || publicationDate.length || author.length || minAgeRestriction.length || qualityVideos.length < 0) {
+        return res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
+    }
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         errors.push({ message: "incorrect title",
             field: "title"
         });
     }
-    let author = req.body.author;
     if (!author || typeof author !== 'string' || author.length > 20) {
         errors.push({
             message: "incorrect author",
             field: "author"
         });
     }
-    let canBeDownloaded = req.body.canBeDownloaded;
     if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
         errors.push({
             message: "incorrect canBeDownloaded",
             field: "canBeDownloaded"
         });
     }
-    let publicationDate = req.body.publicationDate;
     if (publicationDate && typeof publicationDate !== 'string') {
         errors.push({
             message: "incorrect publicationDate",
             field: "publicationDate"
         });
     }
-    let minAgeRestriction = req.body.minAgeRestriction;
     if (!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18) {
         errors.push({ message: "incorrect minAgeRestriction",
             field: "minAgeRestriction"
         });
     }
-    let qualityVideos = req.body.availableResolutions;
     if (!qualityVideos || !Array.isArray(qualityVideos) || !(0, Videomodels_1.qualityCheck)(qualityVideos, Videomodels_1.dbavailableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
@@ -123,8 +126,9 @@ app.put('/videos/:id', (req, res) => {
         canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
         minAgeRestriction: null,
     };
-    const resultVideo = Object.assign(Object.assign({}, video), newVideo);
-    res.status(http_status_codes_1.httpStatusCodes.NO_CONTEND_204).send(resultVideo);
+    const resultVideo = Object.assign(Object.assign({}, video), newVideo // копирование свойств первого массива из свойств второго массива
+    );
+    res.status(http_status_codes_1.httpStatusCodes.CREATED_201).send(resultVideo);
     return;
     //  video.title =	req.body.title,                                через присваивание каждому эллементу 
     // video.author =	req.body.author,                       
