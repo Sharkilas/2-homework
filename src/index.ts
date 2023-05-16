@@ -151,7 +151,7 @@ const newVideo: UpdateVideosModels = {
     }
   
     
- res.status(httpStatusCodes.OK_200).send(resultVideo)                                       
+ res.status(httpStatusCodes.NO_CONTEND_204).send(resultVideo)                                       
    return   });
    
 
