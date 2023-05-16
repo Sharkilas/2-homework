@@ -119,11 +119,14 @@ errors.push({message: "incorrect title",
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
                     })}
+if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
+ {errors.push({
+  message: "incorrect availableResolutions",
+  field: "availableResolutions"})}
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
-  if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
- {return res.sendStatus(httpStatusCodes.NO_CONTEND_204)}
+  
 
     //video.title =	req.body.title,
     //video.author =	req.body.author,                                                         
@@ -134,22 +137,22 @@ errors.push({message: "incorrect title",
    
    
                                        
-  return });
+  
 
-// const newVideo: UpdateVideosModels = {
-    //title:	req.body.title,
-    //author:	req.body.author,
-    //availableResolutions: req.body.availableResolutions, 
-    //canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-    //minAgeRestriction:	null,         
-    //}
-    //const resultVideo = {
-   //   ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
-   // }
+const newVideo: UpdateVideosModels = {
+    title:	req.body.title,
+    author:	req.body.author,
+    availableResolutions: req.body.availableResolutions, 
+    canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+    minAgeRestriction:	null,         
+    }
+    const resultVideo = {
+      ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
+    }
   
     
- // res.status(httpStatusCodes.OK_200).send(resultVideo)                                       
-  // return   
+ res.status(httpStatusCodes.OK_200).send(resultVideo)                                       
+   return   });
    
 
 
