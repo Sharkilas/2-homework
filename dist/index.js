@@ -119,16 +119,18 @@ app.put('/videos/:id', (req, res) => {
     if (title.length || canBeDownloaded.length || publicationDate.length || author.length || minAgeRestriction.length || qualityVideos.length === 0) {
         return res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
     }
-    const newVideo = {
-        title: req.body.title,
-        author: req.body.author,
-        availableResolutions: req.body.availableResolutions,
-        canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-        minAgeRestriction: null,
-    };
-    const resultVideo = Object.assign(Object.assign({}, video), newVideo // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
-    );
-    res.status(http_status_codes_1.httpStatusCodes.OK_200).send(resultVideo);
+    // const newVideo: UpdateVideosModels = {
+    //title:	req.body.title,
+    //author:	req.body.author,
+    //availableResolutions: req.body.availableResolutions, 
+    //canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+    //minAgeRestriction:	null,         
+    //}
+    //const resultVideo = {
+    //   ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
+    // }
+    // res.status(httpStatusCodes.OK_200).send(resultVideo)                                       
+    // return   
     return;
 });
 //  video.title =	req.body.title,                                через присваивание каждому эллементу 
