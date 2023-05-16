@@ -119,10 +119,10 @@ errors.push({message: "incorrect title",
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
                     })}
-if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
- {errors.push({
-  message: "incorrect availableResolutions",
-  field: "availableResolutions"})}
+//if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
+ //{errors.push({
+  //message: "incorrect availableResolutions",
+  //field: "availableResolutions"})}
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
