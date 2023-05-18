@@ -74,7 +74,8 @@ errors.push({message: "incorrect title",
 
 app.put('/videos/:id', (req: Request, res: Response) => {
  
-const video = db.videos.find(v=> v.id === +req.params.id)     
+const video = db.videos.find(v=> v.id === +req.params.id)
+//TODO implement by splice     
 if (!video) {
  return res.sendStatus(httpStatusCodes.NOT_FOUND_404)
 }
@@ -119,10 +120,7 @@ errors.push({message: "incorrect title",
                       message: "incorrect availableResolutions",
                       field: "availableResolutions"
                     })}
-//if (title.length||canBeDownloaded.length||publicationDate.length||author.length||minAgeRestriction.length||qualityVideos.length === 0 )                                        
- //{errors.push({
-  //message: "incorrect availableResolutions",
-  //field: "availableResolutions"})}
+
   if(errors.length > 0) {
     return res.status(httpStatusCodes.BAD_REQUEST_400).send({errorsMessages: errors})
   }
@@ -146,12 +144,24 @@ const newVideo: UpdateVideosModels = {
     canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
     minAgeRestriction:	null,         
     }
-    const resultVideo = {
-      ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
+    //const resultVideo = {
+    //  ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
+   // }
+    for (let i=0; i<db.videos.length; i++){
+      if(db.videos[i].id ===video.id ){
+        db.videos[i].title =	req.body.title,
+        db.videos[i].author =	req.body.author,
+        db.videos[i].availableResolutions =	req.body.availableResolutions,
+        db.videos[i].canBeDownloaded =	req.body.canBeDownloaded,
+        db.videos[i].minAgeRestriction =	req.body.minAgeRestriction,
+        db.videos[i].publicationDate =	req.body.publicationDate
+      }
     }
+    
+    
   
     
- res.status(httpStatusCodes.NO_CONTEND_204).send(resultVideo)                                       
+ res.sendStatus(httpStatusCodes.NO_CONTEND_204)                                      
    return   });
    
 

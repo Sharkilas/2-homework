@@ -69,44 +69,45 @@ app.post('/videos', (req, res) => {
 });
 app.put('/videos/:id', (req, res) => {
     const video = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
+    //TODO implement by splice     
     if (!video) {
         return res.sendStatus(http_status_codes_1.httpStatusCodes.NOT_FOUND_404);
     }
     const errors = [];
     let title = req.body.title;
-    let canBeDownloaded = req.body.canBeDownloaded;
-    let publicationDate = req.body.publicationDate;
-    let author = req.body.author;
-    let minAgeRestriction = req.body.minAgeRestriction;
-    let qualityVideos = req.body.availableResolutions;
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         errors.push({ message: "incorrect title",
             field: "title"
         });
     }
+    let author = req.body.author;
     if (!author || typeof author !== 'string' || author.length > 20) {
         errors.push({
             message: "incorrect author",
             field: "author"
         });
     }
+    let canBeDownloaded = req.body.canBeDownloaded;
     if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
         errors.push({
             message: "incorrect canBeDownloaded",
             field: "canBeDownloaded"
         });
     }
+    let publicationDate = req.body.publicationDate;
     if (publicationDate && typeof publicationDate !== 'string') {
         errors.push({
             message: "incorrect publicationDate",
             field: "publicationDate"
         });
     }
+    let minAgeRestriction = req.body.minAgeRestriction;
     if (!minAgeRestriction || typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18) {
         errors.push({ message: "incorrect minAgeRestriction",
             field: "minAgeRestriction"
         });
     }
+    let qualityVideos = req.body.availableResolutions;
     if (!qualityVideos || !Array.isArray(qualityVideos) || !(0, Videomodels_1.qualityCheck)(qualityVideos, Videomodels_1.dbavailableResolutions)) {
         errors.push({
             message: "incorrect availableResolutions",
@@ -116,31 +117,35 @@ app.put('/videos/:id', (req, res) => {
     if (errors.length > 0) {
         return res.status(http_status_codes_1.httpStatusCodes.BAD_REQUEST_400).send({ errorsMessages: errors });
     }
-    if (title.length || canBeDownloaded.length || publicationDate.length || author.length || minAgeRestriction.length || qualityVideos.length === 0) {
-        return res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
-    }
-    // const newVideo: UpdateVideosModels = {
-    //title:	req.body.title,
-    //author:	req.body.author,
-    //availableResolutions: req.body.availableResolutions, 
-    //canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-    //minAgeRestriction:	null,         
-    //}
+    //video.title =	req.body.title,
+    //video.author =	req.body.author,                                                         
+    //video.availableResolutions = req.body.availableResolutions, 
+    //video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+    // video.minAgeRestriction =	req.body.minAgeRestriction,         
+    //video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
+    const newVideo = {
+        title: req.body.title,
+        author: req.body.author,
+        availableResolutions: req.body.availableResolutions,
+        canBeDownloaded: req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
+        minAgeRestriction: null,
+    };
     //const resultVideo = {
-    //   ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
+    //  ...video,...newVideo                                     // копирование свойств первого массива из свойств второго массива, не смог найти про это в документации
     // }
-    // res.status(httpStatusCodes.OK_200).send(resultVideo)                                       
-    // return   
+    for (let i = 0; i < dbVideosRep_1.db.videos.length; i++) {
+        if (dbVideosRep_1.db.videos[i].id === video.id) {
+            dbVideosRep_1.db.videos[i].title = req.body.title,
+                dbVideosRep_1.db.videos[i].author = req.body.author,
+                dbVideosRep_1.db.videos[i].availableResolutions = req.body.availableResolutions,
+                dbVideosRep_1.db.videos[i].canBeDownloaded = req.body.canBeDownloaded,
+                dbVideosRep_1.db.videos[i].minAgeRestriction = req.body.minAgeRestriction,
+                dbVideosRep_1.db.videos[i].publicationDate = req.body.publicationDate;
+        }
+    }
+    res.sendStatus(http_status_codes_1.httpStatusCodes.NO_CONTEND_204);
     return;
 });
-//  video.title =	req.body.title,                                через присваивание каждому эллементу 
-// video.author =	req.body.author,                       
-// video.availableResolutions = req.body.availableResolutions, 
-// video.canBeDownloaded = req.body.canBeDownloaded ? req.body.canBeDownloaded : false,
-// video.minAgeRestriction =	req.body.minAgeRestriction,         
-// video.publicationDate =	tommorowDate.toISOString() || req.body.publicationDate,                                       
-//res.status(httpStatusCodes.CREATED_201)                                     
-//return });
 app.get('/videos/:id', (req, res) => {
     const videoId = dbVideosRep_1.db.videos.find(v => v.id === +req.params.id);
     if (videoId) {
