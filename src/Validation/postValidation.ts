@@ -16,16 +16,17 @@ export const blogNamePostValidation = body("blogName").isString().trim().notEmpt
 
 
 export const errorValidationMiddleware = (req: Request, res: Response, next:NextFunction) => {           
-  if (!validationResult(req).isEmpty()){
-    const errorsResponse = validationResult(req).array({onlyFirstError: true}).map((error: any)=>{
-      console.log(error);
-      const err = error as FieldValidationError;
-      
-      return  {message: err.msg,
-                 field: err.path}                                              
-    })
-    return res.status(httpStatusCodes.BAD_REQUEST_400).json({'errorsMesage': errorsResponse})       
-  } else {
-    return next()
+    const errors = validationResult(req).formatWith((error: any) =>({
+          message: error.msg,
+          field: error.path
+    }))
+ 
+    if(!errors.isEmpty()){
+      const errArr = errors.array({onlyFirstError: true})
+
+      return res.status(httpStatusCodes.BAD_REQUEST_400).json({errorsMesages: errArr})       
+    }
+    
+    next()
   }
-}
+    

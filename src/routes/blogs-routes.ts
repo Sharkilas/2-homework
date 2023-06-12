@@ -21,7 +21,7 @@ blogsRoute.get('/', (req: Request, res: Response) => {
 blogsRoute.get('/:id', (res: Response, req: Request) => {
     let foundBlogs = blogsRepositories.getBlogById(req.params.id);
     if (foundBlogs) {
-        res.send(foundBlogs ).sendStatus(httpStatusCodes.OK_200)
+        res.status(httpStatusCodes.OK_200).json(foundBlogs)   ///TODO
       } else {
         res.sendStatus(404)
       }

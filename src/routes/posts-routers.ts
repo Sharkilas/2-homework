@@ -13,19 +13,19 @@ export const postsRoute = Router ({})
 
 
   
-postsRoute.get('/posts', (req: Request, res: Response) => {
+postsRoute.get('/', (req: Request, res: Response) => {
     res.send(postsRepositories.getPosts()).sendStatus(httpStatusCodes.OK_200)                   //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
   })
   
 postsRoute.get('/:id', (res: Response, req: Request) => {
   let foundPost = postsRepositories.getPostsId(req.params.id);
   if (foundPost) {
-        res.send(foundPost).sendStatus(httpStatusCodes.OK_200)
+    res.status(httpStatusCodes.OK_200).json(foundPost)    
       } else {
         res.sendStatus(404)
       }
   })
-postsRoute.post('/posts', 
+postsRoute.post('/', 
   authGuardMiddleware,
   titlePostValidation,
   shortDescriptionPostValidation,
@@ -45,7 +45,7 @@ const createdPost = postsRepositories.createPosts({title, shortDescription, cont
    
     
   
-postsRoute.put('/posts/:id', 
+postsRoute.put('/:id', 
   authGuardMiddleware,
   titlePostValidation,
   shortDescriptionPostValidation,
