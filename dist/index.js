@@ -15,7 +15,7 @@ app.use(express_1.default.json());
 app.use('/posts', posts_routers_1.postsRoute);
 app.use('/blogs', blogs_routes_1.blogsRoute);
 app.get('/', (req, res) => {
-    res.send('Доброе утро!!');
+    res.send('Доброе утро!!!');
 });
 app.delete('/testing/all-data', (req, res) => {
     db_1.db.posts = [];

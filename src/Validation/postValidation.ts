@@ -15,6 +15,8 @@ export const blogIdPostValidation = body("blogId").exists().isString().trim().no
 export const blogNamePostValidation = body("blogName").isString().trim().notEmpty().isLength({max: 15});
 
 
+
+
 export const errorValidationMiddleware = (req: Request, res: Response, next:NextFunction) => {           
     const errors = validationResult(req).formatWith((error: any) =>({
           message: error.msg,
@@ -27,6 +29,8 @@ export const errorValidationMiddleware = (req: Request, res: Response, next:Next
       return res.status(httpStatusCodes.BAD_REQUEST_400).json({errorsMesages: errArr})       
     }
     else 
-    {return next()}
+    {
+      return next()
+    }
   }
     
