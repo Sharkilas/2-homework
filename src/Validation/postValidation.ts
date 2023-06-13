@@ -26,7 +26,7 @@ export const errorValidationMiddleware = (req: Request, res: Response, next:Next
 
       return res.status(httpStatusCodes.BAD_REQUEST_400).json({errorsMesages: errArr})       
     }
-    
-    next()
+    else 
+    {return next()}
   }
     
