@@ -18,7 +18,7 @@ blogsRoute.get('/', (req: Request, res: Response) => {
       res.send(blogsRepositories.getBlogs()).sendStatus(httpStatusCodes.OK_200)
  })
 
-blogsRoute.get('/:id', (res: Response, req: Request) => {
+blogsRoute.get('/:id', (req: Request, res: Response) => {
     let foundBlogs = blogsRepositories.getBlogById(req.params.id);
     if (foundBlogs) {
         res.status(httpStatusCodes.OK_200).json(foundBlogs)   ///TODO
@@ -31,9 +31,9 @@ blogsRoute.get('/:id', (res: Response, req: Request) => {
 
 blogsRoute.post('/', 
 authGuardMiddleware,
+websiteBlogUrlValidation,
 nameBlogValidation,
 descriptionBlogValidation,
-websiteBlogUrlValidation,
 errorValidationMiddleware,
 (req: Request, res: Response) => {
   const name = req.body.name
@@ -46,9 +46,9 @@ errorValidationMiddleware,
     
 blogsRoute.put('/:id', 
 authGuardMiddleware,
+websiteBlogUrlValidation,
 nameBlogValidation,
 descriptionBlogValidation,
-websiteBlogUrlValidation,
 errorValidationMiddleware,
 (req: Request, res: Response) => {
   const updateBlogModel: TUpdateBlogInputModel = {
@@ -65,7 +65,9 @@ errorValidationMiddleware,
   res.sendStatus(httpStatusCodes.NO_CONTEND_204)                                      
   return   })
 
-  blogsRoute.delete('/:id', (res: Response, req: Request) => {
+  blogsRoute.delete('/:id', 
+  authGuardMiddleware,
+  (req: Request, res: Response) => {
     let isDeleted: boolean = blogsRepositories.deleteBlog(req.params.id);
     if (!isDeleted) {
         res.sendStatus(httpStatusCodes.NOT_FOUND_404)

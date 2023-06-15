@@ -17,7 +17,7 @@ postsRoute.get('/', (req: Request, res: Response) => {
     res.send(postsRepositories.getPosts()).sendStatus(httpStatusCodes.OK_200)                   //res.send(httpStatusCodes.OK_200).send(dbVideos) выдает ошибку попробую по другому
   })
   
-postsRoute.get('/:id', (res: Response, req: Request) => {
+postsRoute.get('/:id', (req: Request, res: Response) => {
   let foundPost = postsRepositories.getPostsId(req.params.id);
   if (foundPost) {
     res.status(httpStatusCodes.OK_200).json(foundPost)    
@@ -67,7 +67,9 @@ postsRoute.put('/:id',
   res.sendStatus(httpStatusCodes.NO_CONTEND_204)                                      
   return   })
 
-postsRoute.delete('/:id', (res: Response, req: Request) => {
+postsRoute.delete('/:id', 
+authGuardMiddleware,
+(req: Request, res: Response) => {
     let isDeleted: boolean = postsRepositories.deletePost(req.params.id);
     if (!isDeleted) {
         res.sendStatus(httpStatusCodes.NOT_FOUND_404)
